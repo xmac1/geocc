@@ -34,7 +34,7 @@ type Area struct {
 type Region [][]float32
 type Point []float32 // Point is Long/Lat multiply 1e5 for efficient
 
-var tree = &Quadtree{}
+var tree = &Quadtree{MaxLevels: 2, MaxObjects: 5}
 
 // Initialize Country Code Map
 func InitCountryMap(filename string) (err error) {

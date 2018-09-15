@@ -8,13 +8,6 @@ import (
 	"github.com/xmac1/geocc"
 )
 
-func init() {
-	if err := geocc.InitCountryMap("countries_int32.json"); err != nil {
-		panic(err)
-	}
-
-}
-
 func BenchmarkGeo2Country(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
@@ -28,8 +21,10 @@ func TestGeo2Country(t *testing.T) {
 		panic(err)
 	}
 
+	fmt.Println(geocc.Geo2Country([]float32{113.93474, 22.525246}))
+
 	start := time.Now()
-	n := 1000000
+	n := 10000
 	for i := 0; i < n; i++ {
 		geocc.Geo2Country([]float32{113.93474, 22.525246})
 	}
