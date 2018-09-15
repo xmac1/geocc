@@ -13,13 +13,13 @@ type Quadtree struct {
 
 // Bounds - A bounding box with a x,y origin and width and height
 type Bounds struct {
-	X      int32
-	Y      int32
-	Width  int32
-	Height int32
-	XMax   int32
-	YMax   int32
-	ID     int32
+	X      float32 `json:"x"`
+	Y      float32 `json:"y"`
+	Width  float32 `json:"width"`
+	Height float32 `json:"height"`
+	XMax   float32 `json:"x_max"`
+	YMax   float32 `json:"y_max"`
+	ID     int32   `json:"id"`
 }
 
 //IsPoint - Checks if a bounds object is a point or not (has no width or height)
@@ -66,7 +66,7 @@ func (b *Bounds) Intersects(a Bounds) bool {
 
 }
 
-func (b *Bounds) IntersectsByPoint(x, y int32) bool {
+func (b *Bounds) IntersectsByPoint(x, y float32) bool {
 	// a is left of b
 	if x < b.X {
 		return false
@@ -192,7 +192,7 @@ func (qt *Quadtree) split() {
 }
 
 // getIndex - Determine which quadrant the object belongs to (0-3)
-func (qt *Quadtree) getIndexPoint(x, y int32) int {
+func (qt *Quadtree) getIndexPoint(x, y float32) int {
 
 	index := -1 // index of the subnode (0-3), or -1 if pRect cannot completely fit within a subnode and is part of the parent node
 
@@ -323,7 +323,7 @@ func (qt *Quadtree) Insert(pRect Bounds) {
 }
 
 // Retrieve - Return all objects that could collide with the given object
-func (qt *Quadtree) RetrieveByPoint(x, y int32) []Bounds {
+func (qt *Quadtree) RetrieveByPoint(x, y float32) []Bounds {
 
 	index := qt.getIndexPoint(x, y)
 
@@ -390,7 +390,7 @@ func (qt *Quadtree) RetrievePoints(find Bounds) []Bounds {
 	for o := 0; o < len(potentials); o++ {
 
 		// X and Ys are the same and it has no Width and Height (Point)
-		xyMatch := potentials[o].X == int32(find.X) && potentials[o].Y == int32(find.Y)
+		xyMatch := potentials[o].X == float32(find.X) && potentials[o].Y == float32(find.Y)
 		if xyMatch && potentials[o].IsPoint() {
 			foundPoints = append(foundPoints, find)
 		}
@@ -401,7 +401,7 @@ func (qt *Quadtree) RetrievePoints(find Bounds) []Bounds {
 }
 
 // RetrieveIntersections - Bring back all the bounds in a Quadtree that intersect with a provided bounds
-func (qt *Quadtree) RetrieveIntersections(x, y int32) []int32 {
+func (qt *Quadtree) RetrieveIntersections(x, y float32) []int32 {
 
 	potentials := qt.RetrieveByPoint(x, y)
 	var foundIntersections []int32

@@ -3,25 +3,34 @@ package geocc_test
 import (
 	"fmt"
 	"testing"
+	"time"
 
-	"aladinfun.com/Koalas/server/srv/recsrv/internal/collect/engine/geocc"
+	"github.com/xmac1/geocc"
 )
 
 func BenchmarkGeo2Country(b *testing.B) {
-	if err := geocc.InitCountryMap("countries.json"); err != nil {
-		panic(err)
-	}
 
 	for i := 0; i < b.N; i++ {
-		fmt.Println(geocc.Geo2Country([]float32{116.4074, 39.9042}))
+
 	}
 
 }
 
 func TestGeo2Country(t *testing.T) {
-	if err := geocc.InitCountryMap("countries.json"); err != nil {
+	if err := geocc.InitCountryMap("D:/countries.json"); err != nil {
 		panic(err)
 	}
 
-	fmt.Println(geocc.Geo2Country([]float32{100.5018, 13.7563}))
+	fmt.Println(geocc.Geo2Country([]float32{113.93474, 22.525246}))
+
+	start := time.Now()
+	n := 10000
+	for i := 0; i < n; i++ {
+		geocc.Geo2Country([]float32{113.93474, 22.525246})
+	}
+	dur := time.Since(start)
+
+	fmt.Println(dur.String())
+
+	fmt.Println("per second, ", int64(n*1000)/(dur.Nanoseconds()/1e6))
 }

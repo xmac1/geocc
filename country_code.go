@@ -31,10 +31,10 @@ type Area struct {
 	Bounds Bounds // Bounds mean AABB in legacy quadtree
 }
 
-type Region [][]int32
-type Point []int32 // Point is Long/Lat multiply 1e5 for efficient
+type Region [][]float32
+type Point []float32 // Point is Long/Lat multiply 1e5 for efficient
 
-var tree = &Quadtree{}
+var tree = &Quadtree{MaxLevels: 2, MaxObjects: 5}
 
 // Initialize Country Code Map
 func InitCountryMap(filename string) (err error) {
@@ -54,7 +54,7 @@ func InitCountryMap(filename string) (err error) {
 		panic(err)
 	}
 
-	i := 0
+	i := 1
 	for _, country := range data.Countries {
 		country.Bounds.ID = int32(i)
 		tree.Insert(country.Bounds)
@@ -74,10 +74,8 @@ func Geo2Country(point Point) string {
 
 	for _, b := range bs {
 		region := regionMap[int(b)]
-
 		if pnpoly(region.Geo, point) {
 			return region.Name
-
 		}
 
 	}
@@ -85,7 +83,7 @@ func Geo2Country(point Point) string {
 }
 
 // check if  point inside polygon
-func pnpoly(polygon Region, point []int32) bool {
+func pnpoly(polygon Region, point []float32) bool {
 	//fmt.Println(polygon)
 	i, j := 0, 0
 	c := false
