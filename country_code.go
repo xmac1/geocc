@@ -42,7 +42,7 @@ type CountryPoint struct {
 	Country string
 }
 
-var tree = &Quadtree{MaxLevels: 2, MaxObjects: 5}
+var tree = &Quadtree{MaxLevels: 0, MaxObjects: 1}
 
 // Initialize Country Code Map
 func InitCountryMap(filename string) (err error) {

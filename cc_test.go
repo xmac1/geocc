@@ -21,12 +21,12 @@ func TestGeo2Country(t *testing.T) {
 		panic(err)
 	}
 
-	fmt.Println(geocc.Geo2Country([]float32{113.93474, 22.525246}))
+	fmt.Println(geocc.Geo2Country([]float32{100.5018, 13.7563}))
 
 	start := time.Now()
-	n := 10000
+	n := 50000
 	for i := 0; i < n; i++ {
-		geocc.Geo2Country([]float32{113.93474, 22.525246})
+		geocc.Geo2Country([]float32{100.5018, 13.7563})
 	}
 	dur := time.Since(start)
 
