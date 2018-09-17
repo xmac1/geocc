@@ -34,3 +34,11 @@ func TestGeo2Country(t *testing.T) {
 
 	fmt.Println("per second, ", int64(n*1000)/(dur.Nanoseconds()/1e6))
 }
+
+func TestInitKDTree(t *testing.T) {
+	geocc.InitKDTree("D:/countries.json")
+
+	cn := geocc.SearchCountry(106.9123, 29.4316)
+
+	fmt.Println(cn)
+}

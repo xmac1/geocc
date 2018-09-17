@@ -4,7 +4,10 @@ import (
 	"io/ioutil"
 	"os"
 
+	"fmt"
+
 	"github.com/json-iterator/go"
+	"github.com/xmac1/example/kdtree"
 )
 
 var json = jsoniter.ConfigCompatibleWithStandardLibrary
@@ -33,6 +36,11 @@ type Area struct {
 
 type Region [][]float32
 type Point []float32 // Point is Long/Lat multiply 1e5 for efficient
+
+type CountryPoint struct {
+	Point
+	Country string
+}
 
 var tree = &Quadtree{MaxLevels: 2, MaxObjects: 5}
 
@@ -97,4 +105,49 @@ func pnpoly(polygon Region, point []float32) bool {
 		j = i
 	}
 	return c
+}
+
+var kdTree *kdtree.KDNode
+
+//
+func InitKDTree(filename string) {
+	file, err := os.Open(filename)
+	if err != nil {
+		panic(err)
+	}
+
+	bts, err := ioutil.ReadAll(file)
+	if err != nil {
+		panic(err)
+	}
+
+	data := &Data{}
+
+	if err = json.Unmarshal(bts, data); err != nil {
+		panic(err)
+	}
+
+	nodeList := make([]*kdtree.KDNode, 0, 10000)
+
+	for _, country := range data.Countries {
+		for _, point := range country.Geo {
+			node := &kdtree.KDNode{
+				X:       point[0],
+				Y:       point[1],
+				Country: country.Name,
+			}
+			nodeList = append(nodeList, node)
+		}
+	}
+
+	fmt.Println(len(nodeList))
+
+	kdTree = kdtree.BuildKDTree(nodeList, kdtree.AxisX)
+	return
+}
+
+func SearchCountry(long, lat float32) string {
+	node := kdTree.SearchDepthFirst(long, lat)
+	fmt.Println(node)
+	return node.Country
 }
